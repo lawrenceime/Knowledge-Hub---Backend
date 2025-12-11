@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application, Request, Response } from 'express';  
 import cors from 'cors';
 import helmet from 'helmet';
 // import morgan from 'morgan';
@@ -6,7 +6,7 @@ import helmet from 'helmet';
 // import leaderboardRoutes from './routes/leaderboard.routes';
 // import quizRoutes from './routes/quiz.routes';
 
-const app: Application = express();
+const app: Application = express(); 
 
 // // --- 1. Global Middlewares ---
 // app.use(express.json());       // Parse JSON bodies
