@@ -42,3 +42,8 @@ export const submitFinalResult = async (req: Request, res: Response) => {
     res.status(200).json({success: true, data: result
     })
 }
+
+export const createQuestion = async (req: Request, res: Response) => {
+    const question = await Question.create(req.body);
+    res.status(201).json({success: true, data: question});
+};
