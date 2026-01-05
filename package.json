@@ -4,9 +4,10 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "npm run swagger && nodemon src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "swagger": "npx ts-node swagger.ts"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.0.1",
     "morgan": "^1.10.1",
+    "nodemailer": "^7.0.12",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -36,7 +38,9 @@
     "@types/express": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.0",
+    "@types/nodemailer": "^7.0.4",
     "nodemon": "^3.1.11",
+    "swagger-autogen": "^2.23.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }

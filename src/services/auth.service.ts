@@ -2,8 +2,10 @@ import User, { IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
+import sendEmail from '../utils/sendEmail';
 
 const generateToken = (id : string) => {
+     console.log("JWT Secret:", process.env.JWT_SECRET);
     return jwt.sign({ id }, process.env.JWT_SECRET as string, {
         expiresIn: '30d',
     });
@@ -15,14 +17,12 @@ export const registerUser = async (userData: IUser) => {
     const existingUser = await User.findOne({ 
         $or: [
             { email },
-            { firstName },
-            { lastName },
             { phoneNumber }
         ]
     });
 
     if (existingUser) {
-        throw new Error('User with given email, username, or phone number already exists');
+        throw new Error('User with given email or phone number already exists');
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -35,6 +35,7 @@ export const registerUser = async (userData: IUser) => {
         phoneNumber,
         password: hashedPassword
     });
+
 
     const token = generateToken(newUser._id.toString());
 
@@ -70,8 +71,30 @@ export const forgotPassword = async (email: string) => {
     user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
     await user.save();
 
+    
+
     // In real app, send email with this token
-    const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+     const message = `
+    You requested a password reset. 
+    Please go to this link to reset your password: 
+    ${resetUrl}
+  `;
+
+   try {
+     await sendEmail({
+      email: user.email,
+      subject: 'Password Reset Request',
+      message,
+    });
+   } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    console.error('Email send error:', error);
+    throw new Error('Email could not be sent')
+   }
+
     console.log(`Email sent to ${email} with URL: ${resetUrl}`);
     return { message: 'Email sent', resetUrl }; 
 

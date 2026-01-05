@@ -18,6 +18,18 @@ const UserSchema = new Schema<IUser>({
     password: { type: String, required: true, select: false }, // Don't return password by default
     resetPasswordToken: String,
     resetPasswordExpires: Date,
-}, { timestamps: true })
+}, { timestamps: true ,
+
+    toJSON: {
+        transform(doc, ret: any) { // Change ret to 'any' here
+            delete ret.password;
+            delete ret.__v;
+            return ret;
+        }
+    }
+    
+},
+
+)
 
 export default mongoose.model<IUser>('User', UserSchema);

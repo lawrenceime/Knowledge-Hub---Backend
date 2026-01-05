@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import * as authService from '../services/auth.service';
-import { da } from 'zod/v4/locales';
+
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { user , token } = await authService.registerUser(req.body);
+        console.log("Registered User:", user);
         res.status(201).json({success: true,  token , data: user });
     } catch (error) {
         res.status(400).json({success: false , message : (error as Error).message});
