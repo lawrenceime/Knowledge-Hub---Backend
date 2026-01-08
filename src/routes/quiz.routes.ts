@@ -8,6 +8,8 @@ router.use(protect);
 
 // Quiz Routes
 
+router.post('/create', quizController.createQuestion);
+
 // Get Questions
 router.get('/' , quizController.getQuestions);
 // Check Answer
