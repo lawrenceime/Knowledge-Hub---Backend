@@ -1,11 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import User, { IUser } from '../models/User';
 
-interface AuthRequest extends Request {
-  user?: any;
+export interface AuthRequest extends Request {
+  user?: IUser;
 }
 
-export const protect = (req: AuthRequest, res: Response, next: NextFunction) => {
+export const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
   let token;
 
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -13,14 +14,22 @@ export const protect = (req: AuthRequest, res: Response, next: NextFunction) => 
   }
 
   if (!token) {
-    return res.status(401).json({ success: false, message: 'Not authorized' });
+    return res.status(401).json({ success: false, message: 'Not authorized, no token' });
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded;
+  
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string);
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User no longer exists' });
+    }
+
+    req.user = user; 
     next();
   } catch (err) {
-    return res.status(401).json({ success: false, message: 'Token failed' });
+    return res.status(401).json({ success: false, message: 'Token failed or expired' });
   }
 };

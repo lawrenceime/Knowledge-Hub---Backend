@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import authRoutes from './routes/auth.routes';
 import leaderboardRoutes from './routes/leaderboard.routes';
 import quizRoutes from './routes/quiz.routes';
+import profileRoutes from './routes/profile.routes';
 
 const app: Application = express(); 
 
@@ -18,6 +19,7 @@ app.use(helmet());             // Security headers
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/leaderboard', leaderboardRoutes);
 app.use('/api/v1/quiz', quizRoutes);
+app.use('/api/v1/user', profileRoutes);
 
 // --- 3. Base Route (Health Check) ---
 app.get('/', (req: Request, res: Response) => {
