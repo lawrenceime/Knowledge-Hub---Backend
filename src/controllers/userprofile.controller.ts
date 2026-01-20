@@ -11,6 +11,7 @@ export const getUserProfile = async (req: AuthRequest, res: Response, next: Next
 }
 
 export const updateUserProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
+    console.log("req.body:", req.body);
     try {
         const user = req.user;
         if(!user) {

@@ -12,7 +12,11 @@ const generateToken = (id : string) => {
 }
 
 export const registerUser = async (userData: IUser) => {
-    const { firstName , lastName , email, password, phoneNumber } = userData;
+    const { firstName , lastName , email, password, phoneNumber , gender } = userData;
+
+    if (!firstName || !lastName || !email || !password || !phoneNumber || !gender   ) {
+    throw new Error('Missing required fields');
+}
 
     const existingUser = await User.findOne({ 
         $or: [
@@ -32,6 +36,7 @@ export const registerUser = async (userData: IUser) => {
         firstName,
         lastName,
         email,
+        gender,
         phoneNumber,
         password: hashedPassword
     });
