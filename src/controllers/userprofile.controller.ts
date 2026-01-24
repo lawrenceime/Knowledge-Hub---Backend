@@ -13,17 +13,17 @@ export const getUserProfile = async (req: AuthRequest, res: Response, next: Next
 export const updateUserProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
     console.log("req.body:", req.body);
     try {
-        const user = req.user;
+        const  user = req.user;
         if(!user) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
 
-        const { firstName, lastName, email , phoneNumber } = req.body;
+        const { firstName, lastName, email , phoneNumber , gender } = req.body;
         if(firstName) user.firstName = firstName;
         if(lastName) user.lastName = lastName;
         if(email) user.email = email;
         if(phoneNumber) user.phoneNumber = phoneNumber;
-
+        if(gender) user.gender = gender;
         await user.save();
         res.status(200).json({ success: true, data: user });
     } catch (error) {
