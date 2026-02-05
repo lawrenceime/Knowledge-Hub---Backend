@@ -79,7 +79,7 @@ export const forgotPassword = async (email: string) => {
     
 
     // In real app, send email with this token
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset_password?token=${resetToken}`;
      const message = `
     You requested a password reset. 
     Please go to this link to reset your password: 
