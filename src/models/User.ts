@@ -15,6 +15,7 @@ export interface IUser extends Document {
     gender: Gender;
     password: string;
     phoneNumber?: string;
+    profilePicture?: string;
     resetPasswordToken?: string;
     resetPasswordExpires?: Date;
 }
@@ -26,6 +27,7 @@ const UserSchema = new Schema<IUser>({
     phoneNumber: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false }, // Don't return password by default
     gender : {type: String, enum: Object.values(Gender), required: true },
+    profilePicture: { type: String },
     resetPasswordToken: String,
     resetPasswordExpires: Date,
 }, { timestamps: true ,
