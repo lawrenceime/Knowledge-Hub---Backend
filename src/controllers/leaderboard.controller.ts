@@ -13,8 +13,9 @@ export const getLeaderboard = async (req: Request, res: Response, next: NextFunc
            lastWeek: lastWeekTopThree 
             }    
         });
-    } catch (error) {
-        next(error);
+    } catch (error: any) {
+        console.error("Get leaderboard error:", error);
+        res.status(500).json({ success: false, message: 'Could not load the leaderboard. Please try again later.' });
     }
 }
 
@@ -23,8 +24,9 @@ export const getMyRank = async (req: Request, res: Response, next: NextFunction)
       const userId = (req as any).user.id; 
         const rankData = await leaderboardService.getUserRank(userId);
         res.status(200).json({ success: true, data: rankData });  
-    } catch (error) {
-         next(error);
+    } catch (error: any) {
+        console.error("Get user rank error:", error);
+        res.status(500).json({ success: false, message: 'Could not load your rank. Please try again later.' });
     }
      
 }

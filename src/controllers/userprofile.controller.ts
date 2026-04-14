@@ -13,8 +13,9 @@ export const getUserProfile = async (req: AuthRequest, res: Response, next: Next
     try {
         const user = req.user;
         res.status(200).json({ success: true, data: user });
-    } catch (error) {
-        next(error);
+    } catch (error: any) {
+        console.error("Get profile error:", error);
+        res.status(500).json({ success: false, message: 'Could not load your profile due to a server error. Please try again later.' });
     }
 }
 
@@ -49,7 +50,18 @@ export const updateUserProfile = async (req: AuthRequest, res: Response, next: N
 
         await user.save();
         res.status(200).json({ success: true, data: user });
-    } catch (error) {
-        next(error);
+    } catch (error: any) {
+        console.error("Update profile error:", error);
+        
+        // Mongoose duplicate key error
+        if (error.code === 11000 && error.keyValue) {
+            const field = Object.keys(error.keyValue)[0];
+            return res.status(400).json({ 
+                success: false, 
+                message: `Update failed. This ${field} is already in use by another account.` 
+            });
+        }
+
+        res.status(500).json({ success: false, message: 'A network or server error occurred while updating your profile. Please try again later.' });
     }
 }   
